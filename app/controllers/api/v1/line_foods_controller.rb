@@ -1,7 +1,21 @@
 module Api
   module V1
     class LineFoodsController < ApplicationController
-      before_action :set_food, only: %i[create]
+      before_action :set_food, only: %i[create replace]
+
+      def index
+        line_foods = LineFood.active.all
+        if line_foods.exists? #.exists?メソッドは対象のインスタンスのデータがDBに存在するかどうか？をtrue/falseで返す
+          render json:{
+            line_food_ids: line_foods.map{|line_food| line_food.id}, #Rubyの.mapメソッドは配列やハッシュオブジェクトなどを１つずつとりだし、.mapより後ろのブロック(ここでは{ |line_food| line_food.id }の部分)をあてていきます。
+            restaurant: line_foods[0].restaurant,
+            count:line_foods.sum{|line_food|line_food[:count]},
+            amount: line_foods.sum{|line_food|line_food.total_amount},
+          },status: :ok
+        else
+          render json:{},status: :no_content #一つも存在しない場合はエラーを返すのではなく、空データとstatus: :no_contentを返すことにする。こう書くことで、空データがJSON形式で返される
+        end
+      end
 
       def create
         if LineFood.active.other_restaurant(@ordered_food.restaurant.id).exits? #複数のscope(active、other_restaurant)を組み合わせて、「他店舗でアクティブなLineFood」をActiveRecord_Relationのかたちで取得
@@ -19,6 +33,22 @@ module Api
           },status: :created 
         else
           render json:{},status: :internal_server_error #もしフロントエンドでエラーの内容に応じて表示を変えるような場合にここでHTTPレスポンスステータスコードが500系になることをチェックできる
+        end
+      end
+
+      def replace
+        LineFood.active.other_restaurant(@ordered_food.restaurant.id).each do |line_food| #他店舗のactiveなLineFood一覧をLineFood.active.other_restaurant(@ordered_food.restaurant.id)で取得し、そのままeachに渡す。各要素に対して、do ... end内の処理を実行。
+          line_food.update_attribute(:active, false)#こうすることで、他店舗のLineFood一つずつに対してupdate_attributeで更新。更新内容は引数に渡された(:active, false)で、line_food.activeをfalseにするという意味。
+        end
+
+        set_line_food(@ordered_food)
+
+        if @line_food.save
+         render json:{
+           line_food: @line_food
+         },status: :created
+        else
+         render json: {},status: :internal_server_error
         end
       end
 
