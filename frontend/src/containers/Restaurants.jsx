@@ -1,9 +1,15 @@
-import React, {Fragment, useEffect} from 'react';
+import React, {Fragment, useReducer, useEffect} from 'react';
 import styled from 'styled-components';//このようにすることで、styled-componentsを使うことができる
 
 //apis
 import { fetchRestaurants} from '../apis/restaurants'; 
 
+//reducers
+import {
+  initialState,
+  restaurantsActionTypes,
+  restaurantsReducer,
+} from '../reducers/restaurants';
 
 //images
 import MainLogo from '../images/logo.png';
@@ -28,10 +34,18 @@ height: 600px;
 `;//トップページ真中のメイン画像
 
 export const Restaurants = () => {
+  const [state,dispatch] = useReducer(restaurantsReducer,initialState);
+
   useEffect(() => {
+    dispatch({type: restaurantsActionTypes.FETCHING});//dispatchは引数にオブジェクトを一つだけとる。
     fetchRestaurants()
     .then((data)=>
-    console.log(data)
+    dispatch({
+      type: restaurantsActionTypes.FETCH_SUCCESS,
+      payload:{
+        restaurants: data.restaurants
+      }
+    })
     )
   },[])
   
@@ -43,6 +57,13 @@ export const Restaurants = () => {
       <MainCoverImageWrapper>
         <MainCover src = {MainCoverImage} alt = "main cover"/>
       </MainCoverImageWrapper>
+      {
+        state.restaurantsList.map(restaurant =>
+          <div>
+            {restaurant.name}
+          </div>
+          )
+      }
     </Fragment>
   )
 }
