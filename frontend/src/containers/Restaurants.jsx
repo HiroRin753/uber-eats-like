@@ -45,7 +45,7 @@ const RestaurantsContentsList = styled.div`
   display: flex;
   justify-content: space-around;
   margin-bottom: 150px;
-  `;
+`;
 
 const RestaurantsContentWrapper = styled.div`
   width: 450px;
