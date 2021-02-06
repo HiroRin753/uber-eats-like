@@ -1,12 +1,12 @@
 import React, {Fragment, useReducer, useEffect} from 'react';
 import styled from 'styled-components';//このようにすることで、styled-componentsを使うことができる
-import {link} from "react-router-dom";
+import {Link} from 'react-router-dom';
 
 //components
-import Skeleton from '@material-ui/lab/Skeleton';
+import Skeleton from '@material-ui/lab/Skeleton';//これはスマホアプリやSPAでよく使われる「ロード状態」を表すUIパーツ
 
 //apis
-import { fetchRestaurants} from '../apis/restaurants'; 
+import {fetchRestaurants} from '../apis/restaurants'; 
 
 //reducers
 import {
@@ -41,7 +41,7 @@ const MainCover = styled.img`
 height: 600px;
 `;//トップページ真中のメイン画像
 
-const RestaurantContentsList = styled.div`
+const RestaurantsContentsList = styled.div`
   display: flex;
   justify-content: space-around;
   margin-bottom: 150px;
@@ -93,15 +93,15 @@ export const Restaurants = () => {
       <MainCoverImageWrapper>
         <MainCover src = {MainCoverImage} alt = "main cover"/>
       </MainCoverImageWrapper>
-      <RestaurantContentsList>
+      <RestaurantsContentsList>
         {
           state.fetchState === REQUEST_STATE.LOADING?
            <Fragment>
              <Skeleton variant="rect" width={450} height={300}/>
              <Skeleton variant="rect" width={450} height={300}/>
              <Skeleton variant="rect" width={450} height={300}/>
-           </Fragment>
-           :
+           </Fragment>//ロード中のスケルトンを表示し、ロードが完了したら：で次へ移行
+           ://移行の意味
            state.restaurantsList.map((item, index)=>
             <Link to = {`/restaurants/${item.id}/foods`} key = {index} style={{textDecoration: 'none'}}>
               <RestaurantsContentWrapper>
@@ -112,7 +112,7 @@ export const Restaurants = () => {
             </Link>
            )
         }
-      </RestaurantContentsList>
+      </RestaurantsContentsList>
     </Fragment>
   )
 }
