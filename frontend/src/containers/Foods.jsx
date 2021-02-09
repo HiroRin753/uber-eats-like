@@ -1,5 +1,5 @@
 
-import React, { Fragment,  useReducer, useEffect ,useState } from 'react';
+import React, { Fragment, useReducer, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useHistory, Link } from "react-router-dom";
 
@@ -8,6 +8,7 @@ import { LocalMallIcon } from '../components/Icons';
 import { FoodWrapper } from '../components/FoodWrapper';
 import { NewOrderConfirmDialog } from '../components/NewOrderConfirmDialog';
 import Skeleton from '@material-ui/lab/Skeleton';
+import { FoodOrderDialog } from '../components/FoodOrderDialog';
 
 // reducers
 import {
@@ -22,7 +23,6 @@ import { postLineFoods, replaceLineFoods } from '../apis/line_foods';
 
 // images
 import MainLogo from '../images/logo.png';
-import { FoodOrderDialog } from '../components/FoodOrderDialog';
 import FoodImage from '../images/food-image.jpg';
 
 // constants
@@ -146,8 +146,8 @@ export const Foods = ({//まずFoodsコンポーネントがmatchというオブ
                   onClickFoodWrapper={
                     (food) => setState({
                       ...state,
-                      selectedFood: food,
                       isOpenOrderDialog: true,
+                      selectedFood: food,
                     })
                   }
                   imageUrl={FoodImage}
