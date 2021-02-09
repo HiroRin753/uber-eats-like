@@ -1,5 +1,4 @@
 //FoodWrapper.jsxはその名の通り「フード一つずつのitemを表すReactコンポーネント」を定義
-
 import React from 'react';
 import styled from 'styled-components';
 
