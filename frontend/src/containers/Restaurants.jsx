@@ -31,8 +31,8 @@ const HeaderWrapper = styled.div`
 `;//ここではstyled.divでdivElementに対してスタイルをあてている。ここではページの一番上部にあるヘッダー全体を定義している
 
 const MainLogoImage = styled.img`
-  height: 90px;//ヘッダーのロゴ
-`;
+  height: 90px;
+`;//ヘッダーのロゴ
 
 const MainCoverImageWrapper = styled.div`
   text-align: center;
